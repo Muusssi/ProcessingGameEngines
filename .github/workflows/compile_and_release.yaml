@@ -15,6 +15,7 @@ jobs:
       - name: Compile
         run: |
           ./scripts/compile_tge.sh
+          ./scripts/compile_ttge.sh
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:

@@ -11,16 +11,17 @@ import tge.ui.Button;
 
 public class TGE {
 
-  public static final String VERSION = "0.1.0";
+  public static final String VERSION = "0.2.0";
 
-  public static void show_tge_version() {
-    System.out.println(VERSION);
+  public static void log_version() {
+    System.out.println("TGE version: " + VERSION);
   }
 
   private static PApplet papplet;
 
   public static void init(PApplet papplet) {
     TGE.papplet = papplet;
+    log_version();
   }
 
   public static PApplet papplet() {

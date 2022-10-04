@@ -1,21 +1,22 @@
 #!/bin/bash -ex
 
-echo "-- Compiling TGE package --"
+echo "-- Compiling TTGE package --"
 
 # Create a temporary library for the class files
 mkdir -p tmp
 
 # Compile the jave code
-javac $(find src/tge -name '**.java') \
+javac $(find src/tge -name '*.java') \
+      $(find src/ttge -name '*.java') \
       -d tmp/ \
-      -cp core.jar
+      -classpath core.jar
 
 # Ensure the output folder exists
 mkdir -p jars
 
 # Collect to jar
 cd tmp
-jar cf ../jars/tge.jar ./
+jar cf ../jars/ttge.jar ./
 cd ..
 
 # Remove temp file
