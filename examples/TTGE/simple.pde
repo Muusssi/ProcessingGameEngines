@@ -15,6 +15,7 @@ public void setup() {
   TTGE.sliding_ground = true; // Wheather the ground slides or not
   TTGE.sliding_tanks = true; // Wheather the tanks slide with the ground or not
   TTGE.show_health_bars = true; // Wheather the health bars of tanks are shown or not
+  TTGE.destructiveness = 1; // Value between 0-1 stating how much ground is destroyed by explosions
   // RGB for the ground color
   TTGE.ground_r = 165;
   TTGE.ground_g = 136;

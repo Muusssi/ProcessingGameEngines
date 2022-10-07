@@ -27,6 +27,7 @@ public class TTGE extends TGE {
   public static boolean sliding_tanks = true;
   public static boolean ground_unstable = true;
   public static boolean show_health_bars = true;
+  public static float destructiveness = 1;
 
   public static int ground_r = 165;
   public static int ground_g = 136;

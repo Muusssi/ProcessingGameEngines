@@ -39,20 +39,25 @@ public class Explosion extends Projectile {
         tank.explosion_hit(this);
       }
     }
+
     for (int i = -(int)explosion_radius; i < (int)explosion_radius; ++i) {
       int pos = ((int)x) + i;
       if (pos >= 0 && pos < TTGE.ground.length) {
         float diff = PApplet.sqrt(PApplet.sq(explosion_radius) - PApplet.sq(i));
         if (TTGE.ground[pos] > y + diff) {
-          TTGE.ground[pos] -= 2*diff;
+          TTGE.ground[pos] -= TTGE.destructiveness*2*diff;
         }
         else if (TTGE.ground[pos] > y - diff) {
-          TTGE.ground[pos] -= TTGE.ground[pos] - (y - diff);
+          TTGE.ground[pos] -= TTGE.destructiveness*(TTGE.ground[pos] - (y - diff));
         }
       }
     }
-    TTGE.unstability_start = (int)(x - explosion_radius) - 1;
-    TTGE.unstability_end = (int)(x + explosion_radius) + 1;
+    if (TTGE.unstability_start > x - explosion_radius) {
+      TTGE.unstability_start = (int)(x - explosion_radius) - 1;
+    }
+    if (TTGE.unstability_end < x + explosion_radius) {
+      TTGE.unstability_end = (int)(x + explosion_radius) + 1;
+    }
     TTGE.update_ground_layer();
   }
 
