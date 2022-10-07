@@ -8,20 +8,25 @@ public class Tank {
   public static final int TANK_HEIGHT = 15;
   public static final int TANK_TOWER_RADIUS = 20;
   public static final int TANK_BARREL_LENGTH = 30;
+  public static final float HEALTH_BAR_HEIGHT = 30;
+  public static final int HEALTH_BAR_OFFSET = 20;
   public static final int DEFAULT_HIT_X = -12345;
 
   public static float TANK_MAX_POWER = 20;
   public static float TANK_MIN_POWER = 3;
+  public static float TANK_MAX_HEALTH = 100;
 
   public float x;
   public int direction = 1;
   public float speed = 2;
   public float barrel_angle = 0;
-  public float health = 15;
-  public float power = 15;
+  public float health = TANK_MAX_HEALTH;
+  public float original_health = TANK_MAX_HEALTH;
+  public float power = 10;
   public float fuel = 300;
   public float fuel_consumption = 0;
   public int shot_cooldown = 20;
+  public float shot_damage = 20;
 
   public int r = 0;
   public int g = 200;
@@ -36,6 +41,8 @@ public class Tank {
 
   public Tank() {
     this.x = 100;
+    this.health = TANK_MAX_HEALTH;
+    this.original_health = TANK_MAX_HEALTH;
     TTGE.tanks.add(this);
   }
 
@@ -49,6 +56,21 @@ public class Tank {
          TTGE.papplet().height - aim_y()*TANK_BARREL_LENGTH - y() - TANK_HEIGHT);
     TTGE.papplet().ellipse(this.x, TTGE.papplet().height - y() - TANK_HEIGHT, TANK_TOWER_RADIUS, TANK_TOWER_RADIUS);
     TTGE.papplet().rect(this.x - TANK_WIDTH/2, TTGE.papplet().height - y() - TANK_HEIGHT, TANK_WIDTH, TANK_HEIGHT);
+    TTGE.papplet().popMatrix();
+    TTGE.papplet().popStyle();
+    if (TTGE.show_health_bars) {
+      this.draw_health_bar();
+    }
+  }
+
+  public void draw_health_bar() {
+    TTGE.papplet().pushStyle();
+    TTGE.papplet().pushMatrix();
+    TTGE.papplet().translate(TTGE.x_offset, 0);
+    TTGE.papplet().fill(255, 0, 0);
+    TTGE.papplet().rect(x - HEALTH_BAR_OFFSET, TTGE.papplet().height - y() - TANK_HEIGHT*2 - HEALTH_BAR_HEIGHT, 5, HEALTH_BAR_HEIGHT);
+    TTGE.papplet().fill(100, 0, 0);
+    TTGE.papplet().rect(x - HEALTH_BAR_OFFSET, TTGE.papplet().height - y() - TANK_HEIGHT*2 - HEALTH_BAR_HEIGHT, 5, HEALTH_BAR_HEIGHT*(1 - health/original_health));
     TTGE.papplet().popMatrix();
     TTGE.papplet().popStyle();
   }
@@ -146,11 +168,15 @@ public class Tank {
   }
 
   public Projectile shoot() {
+    return shoot(shot_damage);
+  }
+
+  public Projectile shoot(float damage) {
     if (this.can_shoot()) {
       previous_projectile = new Projectile(
           this.x + aim_x()*TANK_BARREL_LENGTH,
           y() + TANK_HEIGHT + aim_y()*TANK_BARREL_LENGTH,
-          20, aim_x()*power, aim_y()*power);
+          damage, aim_x()*power, aim_y()*power);
       previous_projectile.shooting_tank = this;
       this.previus_shot_frame = TTGE.papplet().frameCount;
       return previous_projectile;
@@ -191,15 +217,29 @@ public class Tank {
       else if (this.barrel_angle > 45) {
         this.lower_barrel();
       }
-      if (can_shoot() && previous_hit_x != DEFAULT_HIT_X &&
-          PApplet.abs(previous_hit_x - target_tank.x) > TANK_WIDTH) {
+      if (can_shoot() && previous_hit_x != DEFAULT_HIT_X) {
         // Adjust based on previous missed shot
+        float delta = PApplet.abs(previous_hit_x - target_tank.x);
+        float adjustment = 0;
+        if (delta > TANK_WIDTH*10) {
+          adjustment = 0.2f;
+        }
+        else if (delta > TANK_WIDTH*5) {
+          adjustment = 0.1f;
+        }
+        else if (delta > TANK_WIDTH) {
+          adjustment = 0.05f;
+        }
+        else if (delta > 1) {
+          adjustment = 0.01f;
+        }
+
         if ((x < target_tank.x && previous_hit_x < target_tank.x) ||
             (x > target_tank.x && previous_hit_x > target_tank.x)) {
-          this.power *= 1.1f;
+          this.power *= 1 + adjustment;
         }
         else {
-          this.power *= 0.9f;
+          this.power *= 1 - adjustment;
         }
       }
       shoot();
