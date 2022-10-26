@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
 import tge.ui.Button;
 
 public class TGE {
 
-  public static final String VERSION = "0.3.0";
+  public static final String VERSION = "0.4.0";
 
   public static void log_version() {
     System.out.println("TGE version: " + VERSION);
@@ -56,6 +57,7 @@ public class TGE {
   // =============================================
   // UI Helpers
   // =============================================
+  public static boolean quit_on_esc = true;
   public static ArrayList<Button> buttons = new ArrayList<Button>();
   public static HashMap<Integer, Boolean> pressed_keys = new HashMap<Integer, Boolean>();
   public static int previous_mouse_press = -100;
@@ -75,6 +77,9 @@ public class TGE {
   public static void register_key_press() {
     pressed_keys.put(papplet().keyCode, true);
     pressed_keys.put((int)TGE.papplet().key, true);
+    if (TGE.papplet().key == PConstants.ESC && !quit_on_esc) {
+      TGE.papplet().key = 0;
+    }
   }
 
   public static void register_key_release() {
