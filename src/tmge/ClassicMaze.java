@@ -3,11 +3,17 @@ package tmge;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import processing.data.JSONObject;
+
 public class ClassicMaze extends FullMaze {
 
   public ClassicMaze(int width, int height) {
     super(width, height);
     this.reset_cells();
+  }
+
+  public ClassicMaze(JSONObject json) {
+    super(json);
   }
 
   @Override
