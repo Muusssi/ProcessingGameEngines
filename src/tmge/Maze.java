@@ -1,5 +1,7 @@
 package tmge;
 
+import java.util.ArrayList;
+
 import processing.core.PGraphics;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
@@ -15,6 +17,8 @@ public class Maze extends SerializableObject {
 
   protected boolean maze_layer_dirty = true;
   public PGraphics maze_layer;
+
+  public ArrayList<MazeCharacter> characters = new ArrayList<MazeCharacter>();
 
   public Maze(int width, int height) {
     if (TMGE.active_maze == null) {
@@ -107,8 +111,19 @@ public class Maze extends SerializableObject {
     TMGE.papplet().translate(TMGE.papplet().width/2 - TMGE.x_offset,
                              TMGE.papplet().height/2 - TMGE.y_offset);
     TMGE.papplet().image(maze_layer, 0, 0);
+    draw_maze_characters();
     TMGE.papplet().ellipse((TMGE.player_x + 0.5f)*TMGE.maze_scale, (TMGE.player_y + 0.5f)*TMGE.maze_scale, TMGE.maze_scale*0.8f, TMGE.maze_scale*0.8f);
     TMGE.papplet().popMatrix();
+    TMGE.papplet().popStyle();
+  }
+
+  public void draw_maze_characters() {
+    TMGE.papplet().pushStyle();
+    for (MazeCharacter character : characters) {
+      character.act();
+      TMGE.papplet().fill(character.r, character.g, character.b);
+      TMGE.papplet().ellipse((character.x + 0.5f)*TMGE.maze_scale, (character.y + 0.5f)*TMGE.maze_scale, TMGE.maze_scale*0.8f, TMGE.maze_scale*0.8f);
+    }
     TMGE.papplet().popStyle();
   }
 

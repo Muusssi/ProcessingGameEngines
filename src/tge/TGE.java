@@ -3,6 +3,7 @@ package tge;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -12,7 +13,7 @@ import tge.ui.Button;
 
 public class TGE {
 
-  public static final String VERSION = "0.5.0";
+  public static final String VERSION = "0.6.0";
 
   public static void log_version() {
     System.out.println("TGE version: " + VERSION);
@@ -114,7 +115,7 @@ public class TGE {
     }
   }
 
-  public static void draw_buttons(ArrayList<Button> buttons) {
+  public static void draw_buttons(List<Button> buttons) {
     Iterator<Button> itr = buttons.iterator();
     while (itr.hasNext()) {
       itr.next().draw();
