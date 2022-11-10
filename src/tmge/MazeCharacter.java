@@ -10,6 +10,9 @@ public class MazeCharacter extends SerializableObject {
   public int x = 0;
   public int y = 0;
 
+  public int slowness = 5;
+  protected int last_acted = 0;
+
   public int r, b, g;
 
   public MazeCharacter(Maze maze) {
@@ -23,6 +26,7 @@ public class MazeCharacter extends SerializableObject {
    this.r = json.getInt("r");
    this.g = json.getInt("g");
    this.b = json.getInt("b");
+   this.slowness = json.getInt("slowness");
   }
 
   @Override
@@ -33,15 +37,18 @@ public class MazeCharacter extends SerializableObject {
     json.put("r", this.r);
     json.put("g", this.g);
     json.put("b", this.b);
+    json.put("slowness", this.slowness);
     return json;
   }
 
   public void act() {
+    if (TMGE.papplet().frameCount - slowness < last_acted) return;
     float rand = TMGE.papplet().random(4);
     if (rand < 1) move_up();
     else if (rand < 2) move_left();
     else if (rand < 3) move_down();
     else if (rand < 4) move_right();
+    last_acted = TMGE.papplet().frameCount;
   }
 
   public MazeCell current_cell() {
