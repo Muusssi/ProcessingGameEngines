@@ -5,10 +5,16 @@ import tge.TGE;
 
 public abstract class Button {
 
+  public static int default_button_height = 30;
+  public static int default_text_size = 12;
+  public static int default_rounding = 10;
+
   public int x, y;
   public int width;
-  public int height = 30;
+  public int height = default_button_height;
   public String text;
+  public int rounding = default_rounding;
+  public int text_size = default_text_size;
 
   public int background_r = 255;
   public int background_g = 255;
@@ -28,18 +34,25 @@ public abstract class Button {
   public int drawn_on_frame = -1;
   public TGEUI parent;
 
+  public void constructor(String text, int x, int y, boolean add_to_all_buttons) {
+    this.text = text;
+    this.x = x;
+    this.y = y;
+    if (text.length() < 4) {
+        this.width = 40;
+    }
+    else {
+        this.width = (int)TGE.papplet().textWidth(text) + 20;
+    }
+    if (add_to_all_buttons) TGE.buttons.add(this);
+  }
+
+  public Button(String text, int x, int y, boolean add_to_all_buttons) {
+    constructor(text, x, y, add_to_all_buttons);
+  }
 
   public Button(String text, int x, int y) {
-      this.text = text;
-      this.x = x;
-      this.y = y;
-      if (text.length() < 4) {
-          this.width = 40;
-      }
-      else {
-          this.width = text.length()*10;
-      }
-      TGE.buttons.add(this);
+    constructor(text, x, y, true);
   }
 
   public String button_text() {
@@ -59,8 +72,11 @@ public abstract class Button {
 
   public void draw() {
     drawn_on_frame = TGE.papplet().frameCount;
+    if (cursor_points()) {
+      hover_action();
+    }
     TGE.papplet().pushStyle();
-    TGE.papplet().textSize(12);
+    TGE.papplet().textSize(text_size);
     if (pressed || cursor_points()){
         if (pressed || TGE.papplet().mousePressed) {
           TGE.papplet().fill(text_r, text_g, text_b);
@@ -73,7 +89,7 @@ public abstract class Button {
       TGE.papplet().fill(background_r, background_g, background_b);
     }
     TGE.papplet().stroke(text_r, text_g, text_b);
-    TGE.papplet().rect(x, y, width, height, 10);
+    TGE.papplet().rect(x, y, width, height, rounding);
 
     if (pressed || (cursor_points() && TGE.papplet().mousePressed)) {
       TGE.papplet().stroke(active_background_r, active_background_g, active_background_b);
@@ -144,6 +160,8 @@ public abstract class Button {
    * This is the method that should be implemented
    */
   public abstract void action();
+
+  public void hover_action() {}
 
   public void release_action() {}
 
