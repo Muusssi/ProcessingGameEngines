@@ -48,6 +48,13 @@ public class Maze extends SerializableObject {
         cells[i][j] = cell;
       }
     }
+    JSONArray charater_array = json.getJSONArray("characters");
+    for (int i = 0; i < charater_array.size(); i++) {
+      MazeCharacter character = (MazeCharacter)SerializableObject.load_instance(charater_array.getJSONObject(i));
+      character.maze = this;
+      characters.add(character);
+    }
+
     maze_layer_dirty = true;
     update_maze_layer();
   }
@@ -67,6 +74,12 @@ public class Maze extends SerializableObject {
       cells.append(row);
     }
     json.put("cells", cells);
+
+    JSONArray character_array = new JSONArray();
+    for (MazeCharacter character : characters) {
+      character_array.append(character.save_object());
+    }
+    json.put("characters", character_array);
     return json;
   }
 
@@ -121,8 +134,7 @@ public class Maze extends SerializableObject {
     TMGE.papplet().pushStyle();
     for (MazeCharacter character : characters) {
       character.act();
-      TMGE.papplet().fill(character.r, character.g, character.b);
-      TMGE.papplet().ellipse((character.x + 0.5f)*TMGE.maze_scale, (character.y + 0.5f)*TMGE.maze_scale, TMGE.maze_scale*0.8f, TMGE.maze_scale*0.8f);
+      character.draw();
     }
     TMGE.papplet().popStyle();
   }

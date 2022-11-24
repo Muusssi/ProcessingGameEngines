@@ -13,6 +13,11 @@ public class TMGE extends TGE {
    * Tommi's Maze Game Engine
    */
 
+  public static final int UP = 1;
+  public static final int LEFT = 2;
+  public static final int DOWN = 3;
+  public static final int RIGHT = 4;
+
   public static String save_game_location = "saved_games/";
   public static String default_save_name = "tmge_save.json";
 
@@ -21,7 +26,6 @@ public class TMGE extends TGE {
   public static int x_offset = 0;
   public static int y_offset = 0;
   public static float camera_smoothing_factor = 0.1f;
-
 
   public static int player_x = 0;
   public static int player_y = 0;

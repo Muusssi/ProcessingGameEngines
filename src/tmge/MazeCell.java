@@ -128,6 +128,14 @@ public class MazeCell extends SerializableObject {
     this.maze.maze_layer_dirty = true;
   }
 
+  public boolean wall_in_direction(int direction) {
+    if (direction == TMGE.UP) return wall_up();
+    if (direction == TMGE.DOWN) return wall_down();
+    if (direction == TMGE.LEFT) return wall_left();
+    if (direction == TMGE.RIGHT) return wall_right();
+    return true;
+  }
+
   public boolean wall_up() {
     if (this.neighbor_up() != null && !this.neighbor_up().wall_down) {
       return false;
@@ -156,6 +164,13 @@ public class MazeCell extends SerializableObject {
     return this.wall_right;
   }
 
+  public MazeCell neighbor_in_direction(int direction) {
+    if (direction == TMGE.UP) return neighbor_up();
+    if (direction == TMGE.DOWN) return neighbor_down();
+    if (direction == TMGE.LEFT) return neighbor_left();
+    if (direction == TMGE.RIGHT) return neighbor_right();
+    return null;
+  }
 
   public MazeCell neighbor_up() {
     if (y > 0) {
