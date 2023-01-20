@@ -72,6 +72,16 @@ public class GameCharacter extends TRPGEObject {
     return false;
   }
 
+  public float total_effect(String effect_name) {
+    float effect = 0;
+    for (EquipmentSlot slot : equipment_slots) {
+      if (slot.item != null) {
+        effect += slot.item.effects.getOrDefault(effect_name, 0f);
+      }
+    }
+    return effect;
+  }
+
   @Override
   public JSONObject save_object() {
     JSONObject save_object = super.save_object();

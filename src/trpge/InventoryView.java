@@ -64,8 +64,8 @@ public class InventoryView extends TGEUI {
     public InventoryButton(Item item) {
       super(item.name, 100 + Button.default_button_height, 120 + Button.default_button_height*inventory_buttons.size());
       this.item = item;
-      if (this.item.image != null) {
-        new InventoryImage(this.item.image, 100, 120 + Button.default_button_height*inventory_buttons.size());
+      if (this.item.image_file != null) {
+        new InventoryImage(this.item.image(), 100, 120 + Button.default_button_height*inventory_buttons.size());
       }
       inventory_buttons.add(this);
     }
@@ -97,8 +97,8 @@ public class InventoryView extends TGEUI {
       this.slot = slot;
       if (this.slot.item != null) {
         this.text = this.slot.item.name;
-        if (this.slot.item.image != null) {
-          new InventoryImage(this.slot.item.image, TGE.papplet().width/2 - Button.default_button_height, 120 + Button.default_button_height*equipment_slot_buttons.size());
+        if (this.slot.item.image_file != null) {
+          new InventoryImage(this.slot.item.image(), TGE.papplet().width/2 - Button.default_button_height, 120 + Button.default_button_height*equipment_slot_buttons.size());
         }
       }
       equipment_slot_buttons.add(this);

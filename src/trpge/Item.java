@@ -1,10 +1,12 @@
 package trpge;
 
+import java.util.HashMap;
+
 import processing.data.JSONObject;
 
 public class Item extends WorldObject {
 
-
+  public HashMap<String,Float> effects = new HashMap<String,Float>();
 
   public Item(String name, String type, String category, String image) {
     super(name, type, category, image);

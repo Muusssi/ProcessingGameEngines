@@ -16,13 +16,16 @@ public class WorldObject extends TRPGEObject {
   public String category;
 
   public String image_file;
-  public PImage image;
 
   public WorldObject(String name, String type, String category, String image) {
     this.name = name;
     this.type = type;
     this.category = category;
     this.image_file = image;
+  }
+
+  public PImage image() {
+    return TRPGE.load_image(this.image_file);
   }
 
   @Override
@@ -53,11 +56,8 @@ public class WorldObject extends TRPGEObject {
     }
     TRPGE.papplet().rectMode(PConstants.CENTER);
     TRPGE.papplet().imageMode(PConstants.CENTER);
-    if (this.image_file != null && this.image == null) {
-      this.image = TRPGE.load_image(this.image_file);
-    }
-    if (this.image != null) {
-      TRPGE.papplet().image(this.image, x, y, width, height);
+    if (this.image() != null) {
+      TRPGE.papplet().image(this.image(), x, y, width, height);
     }
     else {
       TRPGE.papplet().rect(x, y, width, height);
