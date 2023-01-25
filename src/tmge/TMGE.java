@@ -3,6 +3,7 @@ package tmge;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
+import processing.core.PImage;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
 import tge.SerializableObject;
@@ -29,8 +30,9 @@ public class TMGE extends TGE {
 
   public static int player_x = 0;
   public static int player_y = 0;
+  public static PImage player_image;
 
-  public static ArrayList<Maze> mazes = new ArrayList<Maze>();;
+  public static ArrayList<Maze> mazes = new ArrayList<Maze>();
   public static Maze active_maze;
 
   public static void log_version() {
@@ -103,6 +105,18 @@ public class TMGE extends TGE {
     if (active_maze != null) {
       active_maze.draw();
     }
+  }
+
+  public static void draw_player() {
+    TMGE.papplet().pushStyle();
+    if (player_image == null) {
+      TMGE.papplet().fill(255);
+      TMGE.papplet().ellipse((TMGE.player_x + 0.5f)*TMGE.maze_scale, (TMGE.player_y + 0.5f)*TMGE.maze_scale, TMGE.maze_scale*0.8f, TMGE.maze_scale*0.8f);
+    }
+    else {
+      TMGE.papplet().image(player_image, TMGE.player_x*TMGE.maze_scale, TMGE.player_y*TMGE.maze_scale, TMGE.maze_scale, TMGE.maze_scale);
+    }
+    TMGE.papplet().popStyle();
   }
 
   public static boolean player_up() {

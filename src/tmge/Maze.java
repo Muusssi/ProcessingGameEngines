@@ -125,7 +125,7 @@ public class Maze extends SerializableObject {
                              TMGE.papplet().height/2 - TMGE.y_offset);
     TMGE.papplet().image(maze_layer, 0, 0);
     draw_maze_characters();
-    TMGE.papplet().ellipse((TMGE.player_x + 0.5f)*TMGE.maze_scale, (TMGE.player_y + 0.5f)*TMGE.maze_scale, TMGE.maze_scale*0.8f, TMGE.maze_scale*0.8f);
+    TMGE.draw_player();
     TMGE.papplet().popMatrix();
     TMGE.papplet().popStyle();
   }
