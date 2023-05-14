@@ -1,5 +1,8 @@
 #!/bin/bash -ex
 
+# Remove temp file
+rm -rf tmp
+
 echo "-- Compiling TRPGE package --"
 
 # Create a temporary library for the class files
