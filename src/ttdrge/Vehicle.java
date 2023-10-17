@@ -17,10 +17,10 @@ public class Vehicle {
     public PVector speed;
     public float direction = 0;
 
-    public float forward_drag_coefficient = 0.98f;
-    public float slide_drag_coefficient = 0.90f;
+    public float forward_drag_coefficient = 0.99f;
+    public float slide_drag_coefficient = 0.80f;
     public float turn_speed = 0.05f;
-    public float acceleration_speed = 0.2f;
+    public float acceleration_speed = 0.15f;
     public float deceleration_speed = 0.2f;
 
     public Vehicle() {
@@ -74,7 +74,7 @@ public class Vehicle {
             this.direction += turn_speed;
         }
     }
-    
+
     public void fundamental_draw() {
         TTDRGE.papplet().fill(r, g, b);
         TTDRGE.papplet().rectMode(PConstants.CENTER);
@@ -83,11 +83,8 @@ public class Vehicle {
 
     public void draw() {
         TTDRGE.papplet().push();
-        TTDRGE.papplet().translate(TTDRGE.papplet().width/2, TTDRGE.papplet().height/2);
-        TTDRGE.papplet().translate(-TTDRGE.view_offset.x, -TTDRGE.view_offset.y);
         TTDRGE.papplet().translate(this.position.x, this.position.y);
         TTDRGE.papplet().rotate(direction);
-        TTDRGE.papplet().rotate(-TTDRGE.camera_direction);
         this.fundamental_draw();
         TTDRGE.papplet().pop();
     }
@@ -95,12 +92,13 @@ public class Vehicle {
     public void follow_with_camera() {
         if (TTDRGE.view_offset.dist(position) != 0) {
             TTDRGE.view_offset = this.position;
-            //TTDRGE.view_offset.add(position.copy().sub(TTDRGE.view_offset).mult(TTDRGE.camera_smoothing_factor));
         }
-        TTDRGE.camera_direction -= (TTDRGE.camera_direction - (this.direction + PConstants.HALF_PI))*TTDRGE.camera_smoothing_factor;
+        TTDRGE.camera_direction = (TTDRGE.camera_direction - (
+                TTDRGE.camera_direction - (this.direction + PConstants.HALF_PI))*TTDRGE.camera_smoothing_factor);
     }
-    
+
     public void follow_with_camera_horizontal() {
+        TTDRGE.camera_direction -= TTDRGE.camera_direction*TTDRGE.camera_smoothing_factor;
         if (TTDRGE.view_offset.dist(position) != 0) {
             TTDRGE.view_offset.add(position.copy().sub(TTDRGE.view_offset).mult(TTDRGE.camera_smoothing_factor));
         }
