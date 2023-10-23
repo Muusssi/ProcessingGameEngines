@@ -18,8 +18,10 @@ public class TTDRGE extends TGE {
 
     public static PImage track_image;
     public static float track_image_scale = 1;
+    public static float minimap_proportion = 0.3f;
 
     public static ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
+    public static ArrayList<CheckPoint> check_points = new ArrayList<CheckPoint>();
 
     public static void set_track_image(PImage track_image) {
         TTDRGE.track_image = track_image;
@@ -43,6 +45,21 @@ public class TTDRGE extends TGE {
         TTDRGE.scale = 1;
     }
 
+    public static PVector cursor_points_on_track() {
+        return new PVector(papplet().mouseX, papplet().mouseY)
+                .sub(new PVector(papplet().width/2, papplet().height/2))
+                .div(scale)
+                .rotate(camera_direction)
+                .add(new PVector(view_offset.x, view_offset.y));
+    }
+
+    public static PVector cursor_points_on_minimap() {
+        return new PVector(papplet().mouseX, papplet().mouseY)
+                .sub(new PVector((1 - minimap_proportion)*papplet().width, 0))
+                .div(minimap_scale())
+                .mult(track_image_scale);
+    }
+
     public static void draw() {
         papplet().background(200);
         papplet().push();
@@ -56,6 +73,7 @@ public class TTDRGE extends TGE {
                     track_image.height*track_image_scale);
         }
         draw_vehicles();
+        draw_check_points();
         papplet().pop();
     }
 
@@ -66,18 +84,28 @@ public class TTDRGE extends TGE {
         }
     }
 
+    public static void draw_check_points() {
+        for (CheckPoint check_point : check_points) {
+            check_point.draw();
+        }
+    }
+
+    public static float minimap_scale() {
+        return minimap_proportion*papplet().width/track_image.width;
+    }
+
     public static void draw_mini_map() {
         if (track_image != null) {
             papplet().push();
-            float scale = 0.3f*papplet().width/track_image.width;
-            papplet().image(track_image, 0.7f*papplet().width, 0,
-                    track_image.width*scale,
-                    track_image.height*scale);
+            papplet().translate((1 - minimap_proportion)*papplet().width, 0);
+            papplet().scale(minimap_scale());
+            papplet().image(track_image, 0, 0);
+            papplet().scale(1/track_image_scale);
             for (Vehicle vehicle : vehicles) {
-                papplet().fill(vehicle.r, vehicle.g, vehicle.b);
-                papplet().noStroke();
-                papplet().ellipse(0.7f*papplet().width + vehicle.position.x*scale/track_image_scale,
-                        vehicle.position.y*scale/track_image_scale, 10, 10);
+                vehicle.draw_on_minimap();
+            }
+            for (CheckPoint check_point : check_points) {
+                check_point.draw_on_minimap();
             }
             papplet().pop();
         }

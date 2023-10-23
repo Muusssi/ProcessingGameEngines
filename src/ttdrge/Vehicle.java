@@ -89,6 +89,14 @@ public class Vehicle {
         TTDRGE.papplet().pop();
     }
 
+    public void draw_on_minimap() {
+        TTDRGE.papplet().push();
+        TTDRGE.papplet().fill(this.r, this.g, this.b);
+        TTDRGE.papplet().noStroke();
+        TTDRGE.papplet().ellipse(this.position.x, this.position.y, 20*TTDRGE.track_image_scale, 20*TTDRGE.track_image_scale);
+        TTDRGE.papplet().pop();
+    }
+
     public void follow_with_camera() {
         if (TTDRGE.view_offset.dist(position) != 0) {
             TTDRGE.view_offset = this.position;
