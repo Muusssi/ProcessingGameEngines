@@ -1,9 +1,18 @@
 package ttdrge;
 
 import processing.core.PConstants;
+import processing.data.JSONObject;
 
 public class Car extends Vehicle {
-    
+
+    public Car() {
+        super();
+    }
+
+    public Car(JSONObject json) {
+        super(json);
+    }
+
     @Override
     public void fundamental_draw() {
         TTDRGE.papplet().push();

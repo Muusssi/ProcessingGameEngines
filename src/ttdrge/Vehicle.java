@@ -2,9 +2,11 @@ package ttdrge;
 
 import processing.core.PConstants;
 import processing.core.PVector;
+import processing.data.JSONObject;
+import tge.SerializableObject;
 import tge.TGE;
 
-public class Vehicle {
+public class Vehicle extends SerializableObject {
 
     public float frame_length = 40;
     public float frame_width = 20;
@@ -13,8 +15,8 @@ public class Vehicle {
     public int g = 200;
     public int b = 0;
 
-    public PVector position;
-    public PVector speed;
+    public PVector position = new PVector(0, 0);
+    public PVector speed = new PVector(0, 0);
     public float direction = 0;
 
     public float forward_drag_coefficient = 0.99f;
@@ -25,8 +27,62 @@ public class Vehicle {
 
     public Vehicle() {
         TTDRGE.vehicles.add(this);
-        position = new PVector(0, 0);
-        speed = new PVector(0, 0);
+    }
+
+    public Vehicle(JSONObject json) {
+        TTDRGE.vehicles.add(this);
+        this.update_from_json(json);
+    }
+
+    public void update_from_json(JSONObject json) {
+        this.frame_length = json.getFloat("frame_length", this.frame_length);
+        this.frame_width = json.getFloat("frame_width", this.frame_width);
+
+        this.r = json.getInt("r", this.r);
+        this.g = json.getInt("g", this.g);
+        this.b = json.getInt("b", this.b);
+
+        this.position = new PVector(json.getFloat("position_x", this.position.x),
+                json.getFloat("position_y", this.position.y));
+        this.speed = new PVector(json.getFloat("speed_x", this.speed.x),
+                json.getFloat("speed_y", this.speed.y));
+        this.direction = json.getFloat("direction", this.direction);
+
+        this.forward_drag_coefficient = json.getFloat("forward_drag_coefficient", this.forward_drag_coefficient);
+        this.slide_drag_coefficient = json.getFloat("slide_drag_coefficient", this.slide_drag_coefficient);
+        this.turn_speed = json.getFloat("turn_speed", this.turn_speed);
+        this.acceleration_speed = json.getFloat("acceleration_speed", this.acceleration_speed);
+        this.deceleration_speed = json.getFloat("deceleration_speed", this.deceleration_speed);
+    }
+
+    @Override
+    public JSONObject save_object() {
+        JSONObject json = super.save_object();
+        json.put("frame_length", this.frame_length);
+        json.put("frame_width", this.frame_width);
+
+        json.put("r", this.r);
+        json.put("g", this.g);
+        json.put("b", this.b);
+
+        json.put("position_x", this.position.x);
+        json.put("position_y", this.position.y);
+        json.put("speed_x", this.speed.x);
+        json.put("speed_y", this.speed.y);
+        json.put("direction", this.direction);
+
+        json.put("forward_drag_coefficient", this.forward_drag_coefficient);
+        json.put("slide_drag_coefficient", this.slide_drag_coefficient);
+        json.put("turn_speed", this.turn_speed);
+        json.put("acceleration_speed", this.acceleration_speed);
+        json.put("deceleration_speed", this.deceleration_speed);
+        return json;
+    }
+
+    @Override
+    public void update(JSONObject json) {
+        super.update(json);
+        this.update_from_json(json);
     }
 
     public void animate() {
