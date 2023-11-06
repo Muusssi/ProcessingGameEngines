@@ -12,7 +12,7 @@ public abstract class SerializableObject {
 
     public JSONObject save_object() {
         JSONObject json = new JSONObject();
-        get_constructor(getClass().getCanonicalName());
+        //get_constructor(getClass().getCanonicalName());
         json.put("canonicalName", this.getClass().getCanonicalName());
         return json;
     }
