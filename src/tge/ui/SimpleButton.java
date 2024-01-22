@@ -3,6 +3,7 @@ package tge.ui;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import processing.core.PImage;
 import tge.TGE;
 
 public class SimpleButton extends Button {
@@ -12,6 +13,11 @@ public class SimpleButton extends Button {
 
   public SimpleButton(String text, int x, int y, String method_name) {
     super(text, x, y);
+    set_action_method(method_name);
+  }
+
+  public SimpleButton(PImage image, int x, int y, String method_name) {
+    super(image, x, y);
     set_action_method(method_name);
   }
 
@@ -66,7 +72,7 @@ public class SimpleButton extends Button {
   @Override
   public void release_action() {
     if (this.release_action_method == null) {
-      System.err.println("Button action missing: " + this.text);
+      System.err.println("Button release action missing: " + this.text);
       return;
     }
     this.invoke(this.release_action_method);
