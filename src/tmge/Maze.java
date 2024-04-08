@@ -3,6 +3,7 @@ package tmge;
 import java.util.ArrayList;
 
 import processing.core.PGraphics;
+import processing.core.PImage;
 import processing.data.JSONArray;
 import processing.data.JSONObject;
 import tge.SerializableObject;
@@ -11,6 +12,11 @@ public class Maze extends SerializableObject {
 
   public int width = 0;
   public int height = 0;
+
+  public int r = 100;
+  public int g = 100;
+  public int b = 100;
+  public PImage image;
 
   public MazeCell[][] cells;
   public MazeCell highlighted_cell;
@@ -31,6 +37,7 @@ public class Maze extends SerializableObject {
   }
 
   public Maze(JSONObject json) {
+    super(json);
     if (json.getBoolean("active")) {TMGE.active_maze = this;}
     TMGE.mazes.add(this);
     this.width = json.getInt("width");
@@ -99,12 +106,16 @@ public class Maze extends SerializableObject {
 
   public void update_maze_layer() {
     if (maze_layer == null) {
-      maze_layer = TMGE.papplet().createGraphics(this.width*TMGE.maze_scale,
-                                                 this.height*TMGE.maze_scale);
+      maze_layer = TMGE.papplet().createGraphics(
+          this.width*TMGE.maze_scale,
+          this.height*TMGE.maze_scale);
     }
     if (maze_layer_dirty) {
       maze_layer.beginDraw();
-      maze_layer.background(100);
+      maze_layer.background(r, g, b);
+      if (this.image != null) {
+        maze_layer.image(this.image, 0, 0, this.width*TMGE.maze_scale, this.height*TMGE.maze_scale);
+      }
       maze_layer.line(0, 0, this.width*TMGE.x_offset, 0);
       maze_layer.line(0, 0, 0, this.height*TMGE.x_offset);
       for (int i = 0; i < this.width; i++) {
@@ -122,7 +133,7 @@ public class Maze extends SerializableObject {
     TMGE.papplet().pushStyle();
     TMGE.papplet().pushMatrix();
     TMGE.papplet().translate(TMGE.papplet().width/2 - TMGE.x_offset,
-                             TMGE.papplet().height/2 - TMGE.y_offset);
+        TMGE.papplet().height/2 - TMGE.y_offset);
     TMGE.papplet().image(maze_layer, 0, 0);
     draw_maze_characters();
     TMGE.draw_player();

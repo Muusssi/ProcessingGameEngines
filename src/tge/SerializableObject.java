@@ -9,6 +9,7 @@ public abstract class SerializableObject {
 
     public SerializableObject() {}
 
+    public SerializableObject(JSONObject json) {}
 
     public JSONObject save_object() {
         JSONObject json = new JSONObject();
