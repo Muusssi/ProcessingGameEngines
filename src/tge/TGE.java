@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -13,7 +15,7 @@ import tge.ui.Button;
 
 public class TGE {
 
-  public static final String VERSION = "0.14.0";
+  public static final String VERSION = "0.16.0";
 
   public static void log_version() {
     System.out.println("TGE version: " + VERSION);
@@ -120,6 +122,10 @@ public class TGE {
     while (itr.hasNext()) {
       itr.next().draw();
     }
+  }
+
+  public static String prompt_user_input(String text) {
+    return JOptionPane.showInputDialog(text);
   }
 
   // =============================================
