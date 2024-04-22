@@ -15,7 +15,7 @@ import tge.ui.Button;
 
 public class TGE {
 
-  public static final String VERSION = "0.16.0";
+  public static final String VERSION = "0.17.0";
 
   public static void log_version() {
     System.out.println("TGE version: " + VERSION);
@@ -53,6 +53,30 @@ public class TGE {
       image_cache.put(image_path, image);
     }
     return image_cache.get(image_path);
+  }
+
+  public static PImage load_image_with_transparent_background(String image_path) {
+    return load_image_with_transparent_background(image_path, 240);
+  }
+
+  public static PImage load_image_with_transparent_background(String image_path, float threshold) {
+    PImage original_image = papplet().loadImage(image_path);
+    PGraphics base = papplet().createGraphics(original_image.width, original_image.height);
+    base.beginDraw();
+    base.image(original_image, 0, 0);
+    base.endDraw();
+    base.loadPixels();
+    for (int i = 0; i < (base.width*base.height); i++) {
+      int pixel = base.pixels[i];
+      int r = (pixel >> 16) & 0xFF;
+      int g = (pixel >> 8) & 0xFF;
+      int b = pixel & 0xFF;
+      if (r > threshold && g > threshold && b > threshold) {
+        base.pixels[i] = papplet().color(0, 0);
+      }
+    }
+    base.updatePixels();
+    return base;
   }
 
 
