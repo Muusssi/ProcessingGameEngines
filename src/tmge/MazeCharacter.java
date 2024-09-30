@@ -23,14 +23,15 @@ public class MazeCharacter extends SerializableObject {
   protected MazeCell escape_cell;
   protected ArrayList<Integer> path;
 
-  public PImage image;
   public int slowness = 5;
   protected int last_acted = 0;
 
+  public PImage image;
   public int r, b, g;
 
   // For debugging:
   public boolean draw_path = false;
+
 
   public MazeCharacter(Maze maze) {
     this.maze = maze;
@@ -38,12 +39,17 @@ public class MazeCharacter extends SerializableObject {
   }
 
   public MazeCharacter(JSONObject json) {
-   this.x = json.getInt("x");
-   this.y = json.getInt("y");
-   this.r = json.getInt("r");
-   this.g = json.getInt("g");
-   this.b = json.getInt("b");
-   this.slowness = json.getInt("slowness");
+    super(json);
+    this.x = json.getInt("x");
+    this.y = json.getInt("y");
+    this.max_path = json.getInt("max_path");
+    this.safe_distance = json.getInt("safe_distance");
+    this.minimum_distance = json.getInt("minimum_distance");
+
+    this.r = json.getInt("r");
+    this.g = json.getInt("g");
+    this.b = json.getInt("b");
+    this.slowness = json.getInt("slowness");
   }
 
   @Override
@@ -51,6 +57,9 @@ public class MazeCharacter extends SerializableObject {
     JSONObject json = super.save_object();
     json.put("x", this.x);
     json.put("y", this.y);
+    json.put("max_path", this.max_path);
+    json.put("safe_distance", this.safe_distance);
+    json.put("minimum_distance", this.minimum_distance);
     json.put("r", this.r);
     json.put("g", this.g);
     json.put("b", this.b);
@@ -117,7 +126,7 @@ public class MazeCharacter extends SerializableObject {
       Collections.sort(stack, new Comparator<MazeCell>(){
         @Override
         public int compare(MazeCell c1, MazeCell c2) {
-           return -point_distances.getOrDefault(c1, 0).compareTo(point_distances.getOrDefault(c2, 0));
+          return -point_distances.getOrDefault(c1, 0).compareTo(point_distances.getOrDefault(c2, 0));
         }
       });
       MazeCell current = stack.remove(0);
@@ -172,9 +181,9 @@ public class MazeCharacter extends SerializableObject {
     for (int direction : this.path) {
       MazeCell next_cell = previous_cell.neighbor_in_direction(direction);
       TMGE.papplet().line((previous_cell.x + 0.5f)*TMGE.maze_scale,
-                          (previous_cell.y + 0.5f)*TMGE.maze_scale,
-                          (next_cell.x + 0.5f)*TMGE.maze_scale,
-                          (next_cell.y + 0.5f)*TMGE.maze_scale);
+          (previous_cell.y + 0.5f)*TMGE.maze_scale,
+          (next_cell.x + 0.5f)*TMGE.maze_scale,
+          (next_cell.y + 0.5f)*TMGE.maze_scale);
       previous_cell = next_cell;
     }
     TMGE.papplet().popStyle();

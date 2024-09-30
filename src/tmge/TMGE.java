@@ -31,6 +31,8 @@ public class TMGE extends TGE {
   public static int player_x = 0;
   public static int player_y = 0;
   public static PImage player_image;
+  public static int player_slowness = 0;
+  protected static int last_moved = 0;
 
   public static ArrayList<Maze> mazes = new ArrayList<Maze>();
   public static Maze active_maze;
@@ -119,9 +121,14 @@ public class TMGE extends TGE {
     TMGE.papplet().popStyle();
   }
 
+  public static boolean ready_to_move() {
+    return papplet().frameCount - player_slowness > last_moved;
+  }
+
   public static boolean player_up() {
     if (active_maze == null) return false;
-    if (!current_cell().wall_up()) {
+    if (!current_cell().wall_up() && ready_to_move()) {
+      last_moved = papplet().frameCount;
       player_y--;
       return true;
     }
@@ -130,7 +137,8 @@ public class TMGE extends TGE {
 
   public static boolean player_down() {
     if (active_maze == null) return false;
-    if (!current_cell().wall_down()) {
+    if (!current_cell().wall_down() && ready_to_move()) {
+      last_moved = papplet().frameCount;
       player_y++;
       return true;
     }
@@ -139,7 +147,8 @@ public class TMGE extends TGE {
 
   public static boolean player_left() {
     if (active_maze == null) return false;
-    if (!current_cell().wall_left()) {
+    if (!current_cell().wall_left() && ready_to_move()) {
+      last_moved = papplet().frameCount;
       player_x--;
       return true;
     }
@@ -148,7 +157,8 @@ public class TMGE extends TGE {
 
   public static boolean player_right() {
     if (active_maze == null) return false;
-    if (!current_cell().wall_right()) {
+    if (!current_cell().wall_right() && ready_to_move()) {
+      last_moved = papplet().frameCount;
       player_x++;
       return true;
     }
