@@ -15,11 +15,12 @@ jobs:
       - name: Compile
         run: |
           ./scripts/compile_tge.sh
-          ./scripts/compile_ttge.sh
           ./scripts/compile_tmge.sh
+          ./scripts/compile_tpge.sh
           ./scripts/compile_trpge.sh
           ./scripts/compile_ttbsge.sh
           ./scripts/compile_ttdrge.sh
+          ./scripts/compile_ttge.sh
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
