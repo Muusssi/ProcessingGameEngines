@@ -17,6 +17,9 @@ public class ItemCircle extends SelfOrganisingCollection {
 
   @Override
   public void reorganize() {
+    if (this.title_item != null) {
+      this.title_item.set_target(this.x, this.y);
+    }
     angle_offset = 0;
     int center_offset = 0;
     if (show_values) center_offset = SelfOrganisingItem.POINT_BOX_WIDTH/2;

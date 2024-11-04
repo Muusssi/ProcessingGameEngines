@@ -15,8 +15,20 @@ public abstract class SelfOrganisingCollection {
 
   public boolean show_values = true;
   public boolean show_value_changes = true;
+  public SelfOrganisingItem title_item;
+
+  public SelfOrganisingItem set_title(String title) {
+    title_item = new SelfOrganisingItem(this, title);
+    title_item.hide_value = true;
+    title_item.hide_value_change = true;
+    return title_item;
+  }
 
   public void draw() {
+    if (title_item != null) {
+      title_item.animate();
+      title_item.draw();
+    }
     for (int i = items.size() - 1; i >= 0; i--) {
       SelfOrganisingItem item = items.get(i);
       item.animate();

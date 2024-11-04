@@ -1,5 +1,7 @@
 package tge.ui.selforganizing;
 
+import java.util.HashMap;
+
 import processing.core.PApplet;
 import processing.core.PConstants;
 import tge.TGE;
@@ -15,6 +17,9 @@ public class SelfOrganisingItem implements Comparable<SelfOrganisingItem> {
   public String name;
   public int value = 0;
   public int value_change = 0;
+  public boolean hide_value = false;
+  public boolean hide_value_change = false;
+  public HashMap<String,Float> special_values = new HashMap<String,Float>();
 
   public SelfOrganisingCollection collection;
 
@@ -77,7 +82,7 @@ public class SelfOrganisingItem implements Comparable<SelfOrganisingItem> {
     TGE.papplet().textAlign(PConstants.CENTER, PConstants.CENTER);
 
     TGE.papplet().rect(this.x, this.y, BOX_WIDTH, BOX_HEIGHT, CORNERS);
-    if (this.collection.show_values) {
+    if (this.collection.show_values && !hide_value) {
       TGE.papplet().rect(this.x + BOX_WIDTH/2 + POINT_BOX_WIDTH/2 + 3, this.y, POINT_BOX_WIDTH, BOX_HEIGHT, CORNERS);
       if (this.collection.show_value_changes && this.value_change != 0) {
         TGE.papplet().rect(this.x + BOX_WIDTH/2 + 1.25f*POINT_BOX_WIDTH + 6, this.y, POINT_BOX_WIDTH/2, BOX_HEIGHT, CORNERS);
@@ -85,9 +90,9 @@ public class SelfOrganisingItem implements Comparable<SelfOrganisingItem> {
     }
     TGE.papplet().fill(0);
     TGE.papplet().text(this.name, this.x, this.y);
-    if (this.collection.show_values) {
+    if (this.collection.show_values && !hide_value) {
       TGE.papplet().text(this.value, this.x + BOX_WIDTH/2 + POINT_BOX_WIDTH/2 + 3, this.y);
-      if (this.collection.show_value_changes && this.value_change != 0) {
+      if (this.collection.show_value_changes && this.value_change != 0 && !hide_value_change) {
         String sign = "";
         if (this.value_change > 0) sign = "+";
         TGE.papplet().text(sign + this.value_change, this.x + BOX_WIDTH/2 + 1.25f*POINT_BOX_WIDTH + 6, this.y);
