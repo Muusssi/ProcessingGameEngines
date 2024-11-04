@@ -1,5 +1,7 @@
 package tge;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,6 +13,8 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
+import processing.data.Table;
+import processing.data.TableRow;
 import tge.ui.Button;
 
 public class TGE {
@@ -79,7 +83,52 @@ public class TGE {
     return base;
   }
 
+  // =============================================
+  // Table loaders
+  // =============================================
 
+  public static Table load_table(String filename, String separator) {
+    return load_table(filename, false, separator);
+  }
+
+  public static Table load_table(String filename, boolean header) {
+    return load_table(filename, header, ";");
+  }
+
+  public static Table load_table(String filename) {
+    return load_table(filename, false, ";");
+  }
+
+  public static Table load_table(String filename, boolean header, String separator) {
+    Table table = new Table();
+    boolean header_read = false;
+    BufferedReader reader = papplet().createReader(filename);
+    String line = null;
+    try {
+      while ((line = reader.readLine()) != null) {
+        String[] pieces = PApplet.split(line, separator);
+
+        if (header && header_read) {
+          for (String piece : pieces) {
+            table.addColumn(piece);
+          }
+          header_read = true;
+        }
+        else {
+          TableRow new_row = table.addRow();
+          new_row.setString("name", "Lion");
+          for (int i = 0; i < pieces.length; i++) {
+            new_row.setString(i, pieces[i]);
+          }
+        }
+      }
+      reader.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return table;
+  }
 
   // =============================================
   // UI Helpers
