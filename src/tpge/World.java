@@ -66,11 +66,11 @@ public class World {
   }
 
   public float pointed_x() {
-    return TPGE.papplet().mouseX - camera_x;
+    return TPGE.papplet().mouseX + camera_x - TPGE.papplet().width/2;
   }
 
   public float pointed_y() {
-    return -TPGE.papplet().mouseY + TPGE.papplet().height - camera_y;
+    return -TPGE.papplet().mouseY + camera_y - TPGE.papplet().height/2 + TPGE.papplet().height;
   }
 
 }
