@@ -25,6 +25,16 @@ public class RandomMaze extends Maze {
   }
 
   @Override
+  protected boolean maze_ok() {
+    for (MazeCharacter character : this.characters) {
+      if (character.path_to(TMGE.current_cell()) == null) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @Override
   public void cell_init(MazeCell cell) {
     if (TMGE.papplet().random(1) < wall_factor) {
       cell.wall_right = false;

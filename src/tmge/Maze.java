@@ -10,6 +10,8 @@ import tge.SerializableObject;
 
 public class Maze extends SerializableObject {
 
+  public static int REGENERATION_ATTEMPTS_ALLOWED = 10;
+
   public int width = 0;
   public int height = 0;
 
@@ -93,15 +95,36 @@ public class Maze extends SerializableObject {
   public void cell_init(MazeCell cell) {}
 
   public void reset_cells() {
-    cells = new MazeCell[this.width][this.height];
-    for (int i = 0; i < this.width; i++) {
-      for (int j = 0; j < this.height; j++) {
-        MazeCell cell = new MazeCell(this, i, j);
-        cells[i][j] = cell;
-        cell_init(cell);
+    for (int attempt = 0; attempt < Maze.REGENERATION_ATTEMPTS_ALLOWED; attempt++) {
+      cells = new MazeCell[this.width][this.height];
+      for (int i = 0; i < this.width; i++) {
+        for (int j = 0; j < this.height; j++) {
+          MazeCell cell = new MazeCell(this, i, j);
+          cells[i][j] = cell;
+          cell_init(cell);
+        }
       }
+      if (this.maze_ok()) break;
     }
     maze_layer_dirty = true;
+    for (MazeCharacter character : this.characters) {
+      character.path = null;
+    }
+  }
+
+  protected boolean maze_ok() {
+    return true;
+  }
+
+  public void refresh_background() {
+    maze_layer_dirty = true;
+  }
+
+  public void set_background_color(int r, int g, int b) {
+    this.r = r;
+    this.g = g;
+    this.b = b;
+    this.refresh_background();
   }
 
   public void update_maze_layer() {
@@ -173,7 +196,6 @@ public class Maze extends SerializableObject {
     }
     return null;
   }
-
 
 
 }

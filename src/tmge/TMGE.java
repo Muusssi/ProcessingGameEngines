@@ -113,10 +113,19 @@ public class TMGE extends TGE {
     TMGE.papplet().pushStyle();
     if (player_image == null) {
       TMGE.papplet().fill(255);
-      TMGE.papplet().ellipse((TMGE.player_x + 0.5f)*TMGE.maze_scale, (TMGE.player_y + 0.5f)*TMGE.maze_scale, TMGE.maze_scale*0.8f, TMGE.maze_scale*0.8f);
+      TMGE.papplet().ellipse(
+          (TMGE.player_x + 0.5f)*TMGE.maze_scale,
+          (TMGE.player_y + 0.5f)*TMGE.maze_scale,
+          TMGE.maze_scale*0.8f,
+          TMGE.maze_scale*0.8f);
     }
     else {
-      TMGE.papplet().image(player_image, TMGE.player_x*TMGE.maze_scale, TMGE.player_y*TMGE.maze_scale, TMGE.maze_scale, TMGE.maze_scale);
+      TMGE.papplet().image(
+          player_image,
+          TMGE.player_x*TMGE.maze_scale + 3,
+          TMGE.player_y*TMGE.maze_scale + 3,
+          TMGE.maze_scale - 6,
+          TMGE.maze_scale - 6);
     }
     TMGE.papplet().popStyle();
   }

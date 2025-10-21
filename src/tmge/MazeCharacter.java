@@ -18,6 +18,7 @@ public class MazeCharacter extends SerializableObject {
   public int max_path = -1;
   public int safe_distance = 10;
   public int minimum_distance = 1;
+  public boolean move_randomly = false;
 
   protected MazeCell target_cell;
   protected MazeCell escape_cell;
@@ -68,15 +69,25 @@ public class MazeCharacter extends SerializableObject {
   }
 
   public void set_target(MazeCell target) {
+    if (this.target_cell == target) return;
     this.target_cell = target;
     this.escape_cell = null;
     this.path = this.path_to(this.target_cell);
   }
 
+  public void chase_player() {
+    this.set_target(TMGE.current_cell());
+  }
+
   public void set_escape_target(MazeCell target) {
+    if (this.escape_cell == target) return;
     this.escape_cell = target;
     this.target_cell = null;
     this.path = this.escape_path(this.escape_cell);
+  }
+
+  public void escape_player() {
+    this.set_escape_target(TMGE.current_cell());
   }
 
   public ArrayList<Integer> path_to(MazeCell target) {
@@ -189,9 +200,13 @@ public class MazeCharacter extends SerializableObject {
     TMGE.papplet().popStyle();
   }
 
+  public boolean ready_to_act() {
+    return TMGE.papplet().frameCount - slowness > last_acted;
+  }
+
   public void act() {
     // This is to slow the movement of the character
-    if (TMGE.papplet().frameCount - slowness < last_acted) return;
+    if (!this.ready_to_act()) return;
     if (this.path == null || this.path.isEmpty() || this.maze.maze_layer_dirty) {
       if (escape_cell != null) {
         this.path = this.escape_path(this.target_cell);
@@ -202,6 +217,9 @@ public class MazeCharacter extends SerializableObject {
     }
     if (this.path != null && !this.path.isEmpty()) {
       this.move_in_direction(this.path.remove(0));
+    }
+    else if (this.move_randomly) {
+      this.move_in_direction((int)(Math.random() * 5));
     }
     last_acted = TMGE.papplet().frameCount;
   }
@@ -223,7 +241,9 @@ public class MazeCharacter extends SerializableObject {
 
   public boolean move_up() {
     if (this.maze == null) return false;
+    if (!this.ready_to_act()) return false;
     if (!current_cell().wall_up()) {
+      last_acted = TMGE.papplet().frameCount;
       y--;
       return true;
     }
@@ -232,7 +252,9 @@ public class MazeCharacter extends SerializableObject {
 
   public boolean move_down() {
     if (maze == null) return false;
+    if (!this.ready_to_act()) return false;
     if (!current_cell().wall_down()) {
+      last_acted = TMGE.papplet().frameCount;
       y++;
       return true;
     }
@@ -241,7 +263,9 @@ public class MazeCharacter extends SerializableObject {
 
   public boolean move_left() {
     if (maze == null) return false;
+    if (!this.ready_to_act()) return false;
     if (!current_cell().wall_left()) {
+      last_acted = TMGE.papplet().frameCount;
       x--;
       return true;
     }
@@ -250,7 +274,9 @@ public class MazeCharacter extends SerializableObject {
 
   public boolean move_right() {
     if (maze == null) return false;
+    if (!this.ready_to_act()) return false;
     if (!current_cell().wall_right()) {
+      last_acted = TMGE.papplet().frameCount;
       x++;
       return true;
     }
